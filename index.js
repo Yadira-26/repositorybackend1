@@ -1,14 +1,20 @@
-require('dotenv').config()
-const http = require('http')
+require('dotenv').config();
+const http = require('http');
+const fs = require('fs');
 
-function requesController(req, res){
-    console.log('Bienvenidos al curso')
-    res.end('<h1>Bienvenidos al curso</h1>')
-}
+const server = http.createServer((req, res) => {
+  fs.readFile('index.html', (err, data) => {
+    if (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Error interno del servidor');
+    } else {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    }
+  });
+});
 
-const server = http.createServer(requesController)
-
-const PORT = process.env.PORT || 4000
-server.listen(PORT, '0.0.0.0', function(){
-    console.log("Aplicacion corriendo en: " + PORT)
-})
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log("Aplicación corriendo en:" + PORT);
+});
